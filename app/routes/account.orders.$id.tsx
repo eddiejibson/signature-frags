@@ -1,23 +1,23 @@
-import {json, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from '@remix-run/react';
-import {Money, Image, flattenConnection} from '@shopify/hydrogen';
-import type {OrderLineItemFullFragment} from 'customer-accountapi.generated';
-import {CUSTOMER_ORDER_QUERY} from '~/graphql/customer-account/CustomerOrderQuery';
+import { useLoaderData, type MetaFunction } from '@remix-run/react';
+import { Image, Money, flattenConnection } from '@shopify/hydrogen';
+import { json, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import type { OrderLineItemFullFragment } from 'customer-accountapi.generated';
+import { CUSTOMER_ORDER_QUERY } from '~/graphql/customer-account/CustomerOrderQuery';
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: `Order ${data?.order?.name}`}];
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return [{ title: `Order ${data?.order?.name}` }];
 };
 
-export async function loader({params, context}: LoaderFunctionArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   if (!params.id) {
     return redirect('/account/orders');
   }
 
   const orderId = atob(params.id);
-  const {data, errors} = await context.customerAccount.query(
+  const { data, errors } = await context.customerAccount.query(
     CUSTOMER_ORDER_QUERY,
     {
-      variables: {orderId},
+      variables: { orderId },
     },
   );
 
@@ -25,7 +25,7 @@ export async function loader({params, context}: LoaderFunctionArgs) {
     throw new Error('Order not found');
   }
 
-  const {order} = data;
+  const { order } = data;
 
   const lineItems = flattenConnection(order.lineItems);
   const discountApplications = flattenConnection(order.discountApplications);
@@ -169,7 +169,7 @@ export default function OrderRoute() {
   );
 }
 
-function OrderLineRow({lineItem}: {lineItem: OrderLineItemFullFragment}) {
+function OrderLineRow({ lineItem }: { lineItem: OrderLineItemFullFragment }) {
   return (
     <tr key={lineItem.id}>
       <td>

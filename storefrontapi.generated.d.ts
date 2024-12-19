@@ -293,7 +293,7 @@ export type StoreRobotsQueryVariables = StorefrontAPI.Exact<{
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
 }>;
 
-export type StoreRobotsQuery = {shop: Pick<StorefrontAPI.Shop, 'id'>};
+export type StoreRobotsQuery = { shop: Pick<StorefrontAPI.Shop, 'id'> };
 
 export type FeaturedCollectionFragment = Pick<
   StorefrontAPI.Collection,
@@ -714,7 +714,7 @@ export type ProductVariantFragment = Pick<
     Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
   >;
   image?: StorefrontAPI.Maybe<
-    {__typename: 'Image'} & Pick<
+    { __typename: 'Image' } & Pick<
       StorefrontAPI.Image,
       'id' | 'url' | 'altText' | 'width' | 'height'
     >
@@ -751,7 +751,7 @@ export type ProductFragment = Pick<
                 Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
               >;
               image?: StorefrontAPI.Maybe<
-                {__typename: 'Image'} & Pick<
+                { __typename: 'Image' } & Pick<
                   StorefrontAPI.Image,
                   'id' | 'url' | 'altText' | 'width' | 'height'
                 >
@@ -788,7 +788,7 @@ export type ProductFragment = Pick<
         Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
       >;
       image?: StorefrontAPI.Maybe<
-        {__typename: 'Image'} & Pick<
+        { __typename: 'Image' } & Pick<
           StorefrontAPI.Image,
           'id' | 'url' | 'altText' | 'width' | 'height'
         >
@@ -812,7 +812,7 @@ export type ProductFragment = Pick<
         Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
       >;
       image?: StorefrontAPI.Maybe<
-        {__typename: 'Image'} & Pick<
+        { __typename: 'Image' } & Pick<
           StorefrontAPI.Image,
           'id' | 'url' | 'altText' | 'width' | 'height'
         >
@@ -865,7 +865,7 @@ export type ProductQuery = {
                     Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
                   >;
                   image?: StorefrontAPI.Maybe<
-                    {__typename: 'Image'} & Pick<
+                    { __typename: 'Image' } & Pick<
                       StorefrontAPI.Image,
                       'id' | 'url' | 'altText' | 'width' | 'height'
                     >
@@ -902,7 +902,7 @@ export type ProductQuery = {
             Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
           >;
           image?: StorefrontAPI.Maybe<
-            {__typename: 'Image'} & Pick<
+            { __typename: 'Image' } & Pick<
               StorefrontAPI.Image,
               'id' | 'url' | 'altText' | 'width' | 'height'
             >
@@ -926,7 +926,7 @@ export type ProductQuery = {
             Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
           >;
           image?: StorefrontAPI.Maybe<
-            {__typename: 'Image'} & Pick<
+            { __typename: 'Image' } & Pick<
               StorefrontAPI.Image,
               'id' | 'url' | 'altText' | 'width' | 'height'
             >
@@ -946,7 +946,7 @@ export type ProductQuery = {
   >;
 };
 
-export type SearchProductFragment = {__typename: 'Product'} & Pick<
+export type SearchProductFragment = { __typename: 'Product' } & Pick<
   StorefrontAPI.Product,
   'handle' | 'id' | 'publishedAt' | 'title' | 'trackingParameters' | 'vendor'
 > & {
@@ -967,12 +967,12 @@ export type SearchProductFragment = {__typename: 'Product'} & Pick<
     >;
   };
 
-export type SearchPageFragment = {__typename: 'Page'} & Pick<
+export type SearchPageFragment = { __typename: 'Page' } & Pick<
   StorefrontAPI.Page,
   'handle' | 'id' | 'title' | 'trackingParameters'
 >;
 
-export type SearchArticleFragment = {__typename: 'Article'} & Pick<
+export type SearchArticleFragment = { __typename: 'Article' } & Pick<
   StorefrontAPI.Article,
   'handle' | 'id' | 'title' | 'trackingParameters'
 >;
@@ -999,7 +999,7 @@ export type RegularSearchQueryVariables = StorefrontAPI.Exact<{
 export type RegularSearchQuery = {
   articles: {
     nodes: Array<
-      {__typename: 'Article'} & Pick<
+      { __typename: 'Article' } & Pick<
         StorefrontAPI.Article,
         'handle' | 'id' | 'title' | 'trackingParameters'
       >
@@ -1007,7 +1007,7 @@ export type RegularSearchQuery = {
   };
   pages: {
     nodes: Array<
-      {__typename: 'Page'} & Pick<
+      { __typename: 'Page' } & Pick<
         StorefrontAPI.Page,
         'handle' | 'id' | 'title' | 'trackingParameters'
       >
@@ -1015,7 +1015,7 @@ export type RegularSearchQuery = {
   };
   products: {
     nodes: Array<
-      {__typename: 'Product'} & Pick<
+      { __typename: 'Product' } & Pick<
         StorefrontAPI.Product,
         | 'handle'
         | 'id'
@@ -1051,7 +1051,7 @@ export type RegularSearchQuery = {
   };
 };
 
-export type PredictiveArticleFragment = {__typename: 'Article'} & Pick<
+export type PredictiveArticleFragment = { __typename: 'Article' } & Pick<
   StorefrontAPI.Article,
   'id' | 'title' | 'handle' | 'trackingParameters'
 > & {
@@ -1061,7 +1061,7 @@ export type PredictiveArticleFragment = {__typename: 'Article'} & Pick<
     >;
   };
 
-export type PredictiveCollectionFragment = {__typename: 'Collection'} & Pick<
+export type PredictiveCollectionFragment = { __typename: 'Collection' } & Pick<
   StorefrontAPI.Collection,
   'id' | 'title' | 'handle' | 'trackingParameters'
 > & {
@@ -1070,12 +1070,12 @@ export type PredictiveCollectionFragment = {__typename: 'Collection'} & Pick<
     >;
   };
 
-export type PredictivePageFragment = {__typename: 'Page'} & Pick<
+export type PredictivePageFragment = { __typename: 'Page' } & Pick<
   StorefrontAPI.Page,
   'id' | 'title' | 'handle' | 'trackingParameters'
 >;
 
-export type PredictiveProductFragment = {__typename: 'Product'} & Pick<
+export type PredictiveProductFragment = { __typename: 'Product' } & Pick<
   StorefrontAPI.Product,
   'id' | 'title' | 'handle' | 'trackingParameters'
 > & {
@@ -1111,7 +1111,7 @@ export type PredictiveSearchQueryVariables = StorefrontAPI.Exact<{
 export type PredictiveSearchQuery = {
   predictiveSearch?: StorefrontAPI.Maybe<{
     articles: Array<
-      {__typename: 'Article'} & Pick<
+      { __typename: 'Article' } & Pick<
         StorefrontAPI.Article,
         'id' | 'title' | 'handle' | 'trackingParameters'
       > & {
@@ -1122,7 +1122,7 @@ export type PredictiveSearchQuery = {
         }
     >;
     collections: Array<
-      {__typename: 'Collection'} & Pick<
+      { __typename: 'Collection' } & Pick<
         StorefrontAPI.Collection,
         'id' | 'title' | 'handle' | 'trackingParameters'
       > & {
@@ -1132,13 +1132,13 @@ export type PredictiveSearchQuery = {
         }
     >;
     pages: Array<
-      {__typename: 'Page'} & Pick<
+      { __typename: 'Page' } & Pick<
         StorefrontAPI.Page,
         'id' | 'title' | 'handle' | 'trackingParameters'
       >
     >;
     products: Array<
-      {__typename: 'Product'} & Pick<
+      { __typename: 'Product' } & Pick<
         StorefrontAPI.Product,
         'id' | 'title' | 'handle' | 'trackingParameters'
       > & {
@@ -1156,7 +1156,7 @@ export type PredictiveSearchQuery = {
         }
     >;
     queries: Array<
-      {__typename: 'SearchQuerySuggestion'} & Pick<
+      { __typename: 'SearchQuerySuggestion' } & Pick<
         StorefrontAPI.SearchQuerySuggestion,
         'text' | 'styledText' | 'trackingParameters'
       >

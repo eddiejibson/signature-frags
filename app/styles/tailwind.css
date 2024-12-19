@@ -4,3 +4,30 @@
  */
 
 @import 'tailwindcss';
+
+@theme {
+  --font-family-display: 'Raleway', sans-serif;
+  --font-family-sans: 'Raleway', sans-serif;
+  --font-family-serif: 'Raleway', sans-serif;
+
+  --default-font-family: 'Raleway', sans-serif;
+
+  --bg-tmp: url('/tmp-bg.png');
+}
+
+@layer utilities {
+  .bg-tmp {
+    background-image: var(--bg-tmp);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}
+
+.content {
+  background-image: url('/public/sig-frag-final-bg-blur.png');
+  background-position: top;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+}

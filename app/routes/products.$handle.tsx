@@ -1,20 +1,20 @@
-import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from '@remix-run/react';
+import { useLoaderData, type MetaFunction } from '@remix-run/react';
 import {
-  getSelectedProductOptions,
   Analytics,
-  useOptimisticVariant,
-  getProductOptions,
   getAdjacentAndFirstAvailableVariants,
+  getProductOptions,
+  getSelectedProductOptions,
+  useOptimisticVariant,
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
-import {ProductPrice} from '~/components/ProductPrice';
-import {ProductImage} from '~/components/ProductImage';
-import {ProductForm} from '~/components/ProductForm';
+import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { ProductForm } from '~/components/ProductForm';
+import { ProductImage } from '~/components/ProductImage';
+import { ProductPrice } from '~/components/ProductPrice';
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
-    {title: `Hydrogen | ${data?.product.title ?? ''}`},
+    { title: `${data?.product.title ?? ''} | Signature Frags` },
     {
       rel: 'canonical',
       href: `/products/${data?.product.handle}`,
@@ -23,40 +23,37 @@ export const meta: MetaFunction<typeof loader> = ({data}) => {
 };
 
 export async function loader(args: LoaderFunctionArgs) {
-  // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);
 
-  // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return defer({...deferredData, ...criticalData});
+  return defer({ ...deferredData, ...criticalData });
 }
 
-/**
- * Load data necessary for rendering content above the fold. This is the critical data
- * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
- */
 async function loadCriticalData({
   context,
   params,
   request,
 }: LoaderFunctionArgs) {
-  const {handle} = params;
-  const {storefront} = context;
+  const { handle } = params;
+  const { storefront } = context;
 
   if (!handle) {
     throw new Error('Expected product handle to be defined');
   }
 
-  const [{product}] = await Promise.all([
+  const [{ product }] = await Promise.all([
     storefront.query(PRODUCT_QUERY, {
-      variables: {handle, selectedOptions: getSelectedProductOptions(request)},
+      variables: {
+        handle,
+        selectedOptions: getSelectedProductOptions(request),
+      },
     }),
     // Add other queries here, so that they are loaded in parallel
   ]);
 
   if (!product?.id) {
-    throw new Response(null, {status: 404});
+    throw new Response(null, { status: 404 });
   }
 
   return {
@@ -69,7 +66,7 @@ async function loadCriticalData({
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
-function loadDeferredData({context, params}: LoaderFunctionArgs) {
+function loadDeferredData({ context, params }: LoaderFunctionArgs) {
   // Put any API calls that is not critical to be available on first page render
   // For example: product reviews, product recommendations, social feeds.
 
@@ -77,7 +74,7 @@ function loadDeferredData({context, params}: LoaderFunctionArgs) {
 }
 
 export default function Product() {
-  const {product} = useLoaderData<typeof loader>();
+  const { product } = useLoaderData<typeof loader>();
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -95,7 +92,7 @@ export default function Product() {
     selectedOrFirstAvailableVariant: selectedVariant,
   });
 
-  const {title, descriptionHtml} = product;
+  const { title, descriptionHtml } = product;
 
   return (
     <div className="product">
@@ -117,7 +114,7 @@ export default function Product() {
           <strong>Description</strong>
         </p>
         <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+        <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} />
         <br />
       </div>
       <Analytics.ProductView

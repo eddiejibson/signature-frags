@@ -1,4 +1,4 @@
-import {redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import { redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 
 /**
  * Automatically applies a discount found on the url
@@ -11,9 +11,10 @@ import {redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
  *
  * ```
  */
-export async function loader({request, context, params}: LoaderFunctionArgs) {
-  const {cart} = context;
-  const {code} = params;
+// eslint-disable-next-line import/prefer-default-export
+export async function loader({ request, context, params }: LoaderFunctionArgs) {
+  const { cart } = context;
+  const { code } = params;
 
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);

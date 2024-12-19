@@ -32,24 +32,27 @@ export function Aside({
   type: AsideType;
   heading: React.ReactNode;
 }) {
-  const {type: activeType, close} = useAside();
+  const { type: activeType, close } = useAside();
   const expanded = type === activeType;
 
   useEffect(() => {
     const abortController = new AbortController();
 
     if (expanded) {
-      document.addEventListener(
-        'keydown',
-        function handler(event: KeyboardEvent) {
-          if (event.key === 'Escape') {
-            close();
-          }
-        },
-        {signal: abortController.signal},
-      );
+      const handler = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          close();
+        }
+      };
+
+      document.addEventListener('keydown', handler, {
+        signal: abortController.signal,
+      });
     }
-    return () => abortController.abort();
+
+    return () => {
+      abortController.abort();
+    };
   }, [close, expanded]);
 
   return (
@@ -74,7 +77,7 @@ export function Aside({
 
 const AsideContext = createContext<AsideContextValue | null>(null);
 
-Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
+Aside.Provider = function AsideProvider({ children }: { children: ReactNode }) {
   const [type, setType] = useState<AsideType>('closed');
 
   return (

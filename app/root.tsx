@@ -1,22 +1,21 @@
-import {useNonce, getShopAnalytics, Analytics} from '@shopify/hydrogen';
-import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
+  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
+  ScrollRestoration,
   useRouteError,
   useRouteLoaderData,
-  ScrollRestoration,
-  isRouteErrorResponse,
   type ShouldRevalidateFunction,
 } from '@remix-run/react';
-import favicon from '~/assets/favicon.svg';
-import resetStyles from '~/styles/reset.css?url';
+import { Analytics, getShopAnalytics, useNonce } from '@shopify/hydrogen';
+import { type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { PageLayout } from '~/components/PageLayout';
+import { FOOTER_QUERY, HEADER_QUERY } from '~/lib/fragments';
 import appStyles from '~/styles/app.css?url';
+import resetStyles from '~/styles/reset.css?url';
 import tailwindCss from './styles/tailwind.css?url';
-import {PageLayout} from '~/components/PageLayout';
-import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 
 export type RootLoader = typeof loader;
 
@@ -40,9 +39,9 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 
 export function links() {
   return [
-    {rel: 'stylesheet', href: tailwindCss},
-    {rel: 'stylesheet', href: resetStyles},
-    {rel: 'stylesheet', href: appStyles},
+    { rel: 'stylesheet', href: tailwindCss },
+    { rel: 'stylesheet', href: resetStyles },
+    { rel: 'stylesheet', href: appStyles },
     {
       rel: 'preconnect',
       href: 'https://cdn.shopify.com',
@@ -51,7 +50,20 @@ export function links() {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
-    {rel: 'icon', type: 'image/svg+xml', href: favicon},
+    {
+      rel: 'preconnect',
+      href: 'https://fonts.googleapis.com',
+    },
+    {
+      rel: 'preconnect',
+      href: 'https://fonts.gstatic.com',
+      crossOrigin: 'anonymous',
+    },
+    {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css2?family=Raleway:wght@100..900&display=swap',
+    },
+    // { rel: 'icon', type: 'image/png', href: favicon },
   ];
 }
 
@@ -62,9 +74,9 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  const {storefront, env} = args.context;
+  const { storefront, env } = args.context;
 
-  return defer({
+  return {
     ...deferredData,
     ...criticalData,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
@@ -80,15 +92,15 @@ export async function loader(args: LoaderFunctionArgs) {
       country: args.context.storefront.i18n.country,
       language: args.context.storefront.i18n.language,
     },
-  });
+  };
 }
 
 /**
  * Load data necessary for rendering content above the fold. This is the critical data
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
-async function loadCriticalData({context}: LoaderFunctionArgs) {
-  const {storefront} = context;
+async function loadCriticalData({ context }: LoaderFunctionArgs) {
+  const { storefront } = context;
 
   const [header] = await Promise.all([
     storefront.query(HEADER_QUERY, {
@@ -100,7 +112,7 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
     // Add other queries here, so that they are loaded in parallel
   ]);
 
-  return {header};
+  return { header };
 }
 
 /**
@@ -108,8 +120,8 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
-function loadDeferredData({context}: LoaderFunctionArgs) {
-  const {storefront, customerAccount, cart} = context;
+function loadDeferredData({ context }: LoaderFunctionArgs) {
+  const { storefront, customerAccount, cart } = context;
 
   // defer the footer query (below the fold)
   const footer = storefront
@@ -131,7 +143,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
   };
 }
 
-export function Layout({children}: {children?: React.ReactNode}) {
+export function Layout({ children }: { children?: React.ReactNode }) {
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>('root');
 
@@ -140,9 +152,10 @@ export function Layout({children}: {children?: React.ReactNode}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Meta />
         <Links />
+        <Meta />
       </head>
+
       <body>
         {data ? (
           <Analytics.Provider
@@ -153,7 +166,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
             <PageLayout {...data}>{children}</PageLayout>
           </Analytics.Provider>
         ) : (
-          children
+          children || null
         )}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
@@ -168,6 +181,7 @@ export default function App() {
 
 export function ErrorBoundary() {
   const error = useRouteError();
+
   let errorMessage = 'Unknown error';
   let errorStatus = 500;
 

@@ -179,11 +179,11 @@ export type OrderMoneyFragment = Pick<
 
 export type DiscountApplicationFragment = {
   value:
-    | ({__typename: 'MoneyV2'} & Pick<
+    | ({ __typename: 'MoneyV2' } & Pick<
         CustomerAccountAPI.MoneyV2,
         'amount' | 'currencyCode'
       >)
-    | ({__typename: 'PricingPercentageValue'} & Pick<
+    | ({ __typename: 'PricingPercentageValue' } & Pick<
         CustomerAccountAPI.PricingPercentageValue,
         'percentage'
       >);
@@ -203,11 +203,11 @@ export type OrderLineItemFullFragment = Pick<
     >;
     discountApplication: {
       value:
-        | ({__typename: 'MoneyV2'} & Pick<
+        | ({ __typename: 'MoneyV2' } & Pick<
             CustomerAccountAPI.MoneyV2,
             'amount' | 'currencyCode'
           >)
-        | ({__typename: 'PricingPercentageValue'} & Pick<
+        | ({ __typename: 'PricingPercentageValue' } & Pick<
             CustomerAccountAPI.PricingPercentageValue,
             'percentage'
           >);
@@ -226,7 +226,9 @@ export type OrderFragment = Pick<
   CustomerAccountAPI.Order,
   'id' | 'name' | 'statusPageUrl' | 'processedAt'
 > & {
-  fulfillments: {nodes: Array<Pick<CustomerAccountAPI.Fulfillment, 'status'>>};
+  fulfillments: {
+    nodes: Array<Pick<CustomerAccountAPI.Fulfillment, 'status'>>;
+  };
   totalTax?: CustomerAccountAPI.Maybe<
     Pick<CustomerAccountAPI.MoneyV2, 'amount' | 'currencyCode'>
   >;
@@ -243,11 +245,11 @@ export type OrderFragment = Pick<
   discountApplications: {
     nodes: Array<{
       value:
-        | ({__typename: 'MoneyV2'} & Pick<
+        | ({ __typename: 'MoneyV2' } & Pick<
             CustomerAccountAPI.MoneyV2,
             'amount' | 'currencyCode'
           >)
-        | ({__typename: 'PricingPercentageValue'} & Pick<
+        | ({ __typename: 'PricingPercentageValue' } & Pick<
             CustomerAccountAPI.PricingPercentageValue,
             'percentage'
           >);
@@ -269,11 +271,11 @@ export type OrderFragment = Pick<
           >;
           discountApplication: {
             value:
-              | ({__typename: 'MoneyV2'} & Pick<
+              | ({ __typename: 'MoneyV2' } & Pick<
                   CustomerAccountAPI.MoneyV2,
                   'amount' | 'currencyCode'
                 >)
-              | ({__typename: 'PricingPercentageValue'} & Pick<
+              | ({ __typename: 'PricingPercentageValue' } & Pick<
                   CustomerAccountAPI.PricingPercentageValue,
                   'percentage'
                 >);
@@ -323,11 +325,11 @@ export type OrderQuery = {
       discountApplications: {
         nodes: Array<{
           value:
-            | ({__typename: 'MoneyV2'} & Pick<
+            | ({ __typename: 'MoneyV2' } & Pick<
                 CustomerAccountAPI.MoneyV2,
                 'amount' | 'currencyCode'
               >)
-            | ({__typename: 'PricingPercentageValue'} & Pick<
+            | ({ __typename: 'PricingPercentageValue' } & Pick<
                 CustomerAccountAPI.PricingPercentageValue,
                 'percentage'
               >);
@@ -349,11 +351,11 @@ export type OrderQuery = {
               >;
               discountApplication: {
                 value:
-                  | ({__typename: 'MoneyV2'} & Pick<
+                  | ({ __typename: 'MoneyV2' } & Pick<
                       CustomerAccountAPI.MoneyV2,
                       'amount' | 'currencyCode'
                     >)
-                  | ({__typename: 'PricingPercentageValue'} & Pick<
+                  | ({ __typename: 'PricingPercentageValue' } & Pick<
                       CustomerAccountAPI.PricingPercentageValue,
                       'percentage'
                     >);
@@ -381,7 +383,9 @@ export type OrderItemFragment = Pick<
   'financialStatus' | 'id' | 'number' | 'processedAt'
 > & {
   totalPrice: Pick<CustomerAccountAPI.MoneyV2, 'amount' | 'currencyCode'>;
-  fulfillments: {nodes: Array<Pick<CustomerAccountAPI.Fulfillment, 'status'>>};
+  fulfillments: {
+    nodes: Array<Pick<CustomerAccountAPI.Fulfillment, 'status'>>;
+  };
 };
 
 export type CustomerOrdersFragment = {
