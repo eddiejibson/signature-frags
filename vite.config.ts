@@ -40,6 +40,7 @@ export default defineConfig({
     }),
   ],
   build: {
+    rollupOptions: { treeshake: true },
     // Allow a strict Content-Security-Policy
     // withtout inlining assets as base64:
     assetsInlineLimit: 0,
@@ -49,7 +50,7 @@ export default defineConfig({
   },
   ssr: {
     optimizeDeps: {
-      include: ['react', 'react-dom'],
+      include: ['classnames', 'react', 'react-dom'],
     },
   },
 });

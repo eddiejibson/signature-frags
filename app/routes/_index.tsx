@@ -12,6 +12,8 @@ import type {
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
 import Hero from '~/components/Hero';
+import InitialInfoLanding from '~/components/landing/InitialInfoLanding';
+import SocialPrompt from '~/components/landing/SocialPrompt';
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Signature Frags | Aquacultured Corals' }];
@@ -64,7 +66,20 @@ function loadDeferredData({ context }: LoaderFunctionArgs) {
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
-    <Hero />
+    <>
+      <Hero />
+      <div className="content w-screen min-h-[100vh] flex flex-col pt-14 md:pt-20 px-8 md:px-12 lg:px-20 xl:px-24">
+        <div className="w-full h-full overflow-y-auto ">
+          <InitialInfoLanding />
+          <div className="justify-normal flex mt-10 flex-col">
+            <h1 className="text-xl text-white font-semibold drop-shadow-2xl">
+              Product Spotlight
+            </h1>
+            <SocialPrompt />
+          </div>
+        </div>
+      </div>
+    </>
     // <div className="home">
     //   <FeaturedCollection collection={data.featuredCollection} />
     //   <RecommendedProducts products={data.recommendedProducts} />

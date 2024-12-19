@@ -1,44 +1,29 @@
 import { NavLink } from '@remix-run/react';
 import { useAside } from '~/components/Aside';
 import type { NavigationBarProps } from '~/components/common/header/Header';
-import type { Viewport } from '~/components/common/types';
 
 interface NavigationCenterProps {
   menu: NavigationBarProps['header']['menu'];
-  primaryDomainUrl: NavigationBarProps['header']['shop']['primaryDomain']['url'];
-  viewport: Viewport;
-  publicStoreDomain: NavigationBarProps['publicStoreDomain'];
 }
 
-const NavigationCenter = ({
-  menu,
-  primaryDomainUrl,
-  viewport,
-  publicStoreDomain,
-}: NavigationCenterProps) => {
+const NavigationCenter = ({ menu }: NavigationCenterProps) => {
   const { close } = useAside();
 
   return (
-    <div className="flex flex-row space-x-20" role="navigation">
-      {viewport === 'mobile' && (
-        <NavLink end onClick={close} prefetch="intent" to="/">
-          Home
-        </NavLink>
-      )}
+    <div
+      className="flex-row space-x-5 md:space-x-10 lg:space-x-20 text-xs md:text-sm hidden md:flex"
+      role="navigation"
+    >
       {menu &&
         menu.items.map((item) => {
           if (!item.url) return null;
 
-          // if the url is internal, we strip the domain
-          const url =
-            item.url.includes('myshopify.com') ||
-            item.url.includes(publicStoreDomain) ||
-            item.url.includes(primaryDomainUrl)
-              ? new URL(item.url).pathname
-              : item.url;
+          const url = item.url.includes('myshopify.com')
+            ? new URL(item.url).pathname
+            : item.url;
           return (
             <NavLink
-              className="header-menu-item font-semibold"
+              className="font-semibold hover:font-bold text-white/80  hover:text-white transition-all"
               end
               key={item.id}
               onClick={close}

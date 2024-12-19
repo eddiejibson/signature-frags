@@ -1,16 +1,22 @@
-import { Await, NavLink, useAsyncValue } from '@remix-run/react';
+import { Await, useAsyncValue } from '@remix-run/react';
 import {
   type CartViewPayload,
   useAnalytics,
   useOptimisticCart,
 } from '@shopify/hydrogen';
-import { Suspense } from 'react';
+import classNames from 'classnames';
+import { motion } from 'motion/react';
+import { Suspense, useEffect, useState } from 'react';
 import type {
   CartApiQueryFragment,
   HeaderQuery,
 } from 'storefrontapi.generated';
 import { ReactComponent as Icon } from '~/assets/icon-v2.svg';
+import { ReactComponent as SignatureFragsText } from '~/assets/text.svg';
 import { useAside } from '~/components/Aside';
+import BurgerIcon from '~/components/common/header/BurgerIcon';
+import HeaderRight from '~/components/common/header/HeaderRight';
+import MenuSideNav from '~/components/common/header/MenuSideNav';
 import NavigationCenter from '~/components/common/header/NavCenter';
 
 export interface NavigationBarProps {
@@ -27,42 +33,66 @@ export function NavigationBar({
   publicStoreDomain,
 }: NavigationBarProps) {
   const { menu } = header;
-  return (
-    <nav className="bg-transparent z-10 fixed top-0 left-0 right-0 flex flex-row w-full items-center text-white/80 px-24 py-12">
-      <div className="flex-1 flex justify-start">
-        <Icon className="drop-shadow-2xl h-16" />
-      </div>
-      <div className="flex-1 flex justify-center">
-        <NavigationCenter
-          menu={menu}
-          viewport="desktop"
-          primaryDomainUrl={header.shop.primaryDomain.url}
-          publicStoreDomain={publicStoreDomain}
-        />
-      </div>
-      <div className="flex-1 flex justify-end">
-        <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
-      </div>
-    </nav>
-  );
-}
+  const { type } = useAside();
+  const [isNavDownPage, setIsNavDownPage] = useState<boolean>(false);
 
-function HeaderCtas({
-  isLoggedIn,
-  cart,
-}: Pick<NavigationBarProps, 'isLoggedIn' | 'cart'>) {
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > window.innerHeight / 6) {
+        setIsNavDownPage(true);
+      } else {
+        setIsNavDownPage(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <nav className="flex flex-row" role="navigation">
-      <HeaderMenuMobileToggle />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        <Suspense fallback="Sign in">
-          <Await resolve={isLoggedIn} errorElement="Sign in">
-            {(_isLoggedIn) => (_isLoggedIn ? 'Account' : 'Sign in')}
-          </Await>
-        </Suspense>
-      </NavLink>
-      <SearchToggle />
-      <CartToggle cart={cart} />
+    <nav
+      className={classNames(
+        {
+          '!bg-[#000e40]/30 pt-4 pb-4 shadow-lg ': isNavDownPage,
+          'transition-none backdrop-blur-[1.5rem]':
+            type !== 'mobile' && isNavDownPage,
+          'bg-transparent pt-12 pb-4': !isNavDownPage,
+        },
+        `transition-all duration-700 z-3 fixed top-0 left-0 right-0 flex flex-row w-full items-center text-white/80 px-8 md:px-12 lg:px-20 xl:px-24`,
+      )}
+    >
+      <div className=" md:flex-1 flex-none flex justify-between w-full md:w-max">
+        <div className="flex md:hidden">
+          <BurgerIcon />
+        </div>
+        <div className="flex flex-row items-center">
+          <MenuSideNav menu={menu} />
+          <Icon
+            className={classNames(
+              'drop-shadow-2xl transition-all duration-700 text-white',
+              {
+                'h-12 lg:h-16': !isNavDownPage,
+                'h-7 lg:h-8': isNavDownPage,
+              },
+            )}
+          />
+          {isNavDownPage && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 100 }}
+              transition={{ duration: 2, ease: 'easeIn' }}
+            >
+              <SignatureFragsText className="hidden md:flex ml-2.5 h-8 lg:h-9 mt-1 w-min drop-shadow-2xl" />
+            </motion.div>
+          )}
+        </div>
+      </div>
+      <div className="flex-[3] flex justify-center">
+        <NavigationCenter menu={menu} />
+      </div>
+      <div className="flex-1  justify-end hidden md:flex">
+        <HeaderRight isLoggedIn={isLoggedIn} cart={cart} />
+      </div>
     </nav>
   );
 }
