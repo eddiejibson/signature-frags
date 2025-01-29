@@ -1,23 +1,14 @@
-import { Link, useLoaderData, type MetaFunction } from '@remix-run/react';
-import {
-  Analytics,
-  getPaginationVariables,
-  Image,
-  Money,
-} from '@shopify/hydrogen';
+import { useLoaderData, type MetaFunction } from '@remix-run/react';
+import { Analytics, getPaginationVariables } from '@shopify/hydrogen';
 import {
   defer,
   redirect,
   type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
-import type { ProductItemFragment } from 'storefrontapi.generated';
 import { PaginatedResourceSection } from '~/components/PaginatedResourceSection';
-import { useVariantUrl } from '~/lib/variants';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return [
-    { title: `Signature Frags | ${data?.collection.title ?? ''} Collection` },
-  ];
+  return [{ title: `${data?.collection.title ?? ''} | Signature Frags` }];
 };
 
 export async function loader(args: LoaderFunctionArgs) {
@@ -104,38 +95,6 @@ export default function Collection() {
         }}
       />
     </div>
-  );
-}
-
-function ProductItem({
-  product,
-  loading,
-}: {
-  product: ProductItemFragment;
-  loading?: 'eager' | 'lazy';
-}) {
-  const variantUrl = useVariantUrl(product.handle);
-  return (
-    <Link
-      className="product-item"
-      key={product.id}
-      prefetch="intent"
-      to={variantUrl}
-    >
-      {product.featuredImage && (
-        <Image
-          alt={product.featuredImage.altText || product.title}
-          aspectRatio="1/1"
-          data={product.featuredImage}
-          loading={loading}
-          sizes="(min-width: 45em) 400px, 100vw"
-        />
-      )}
-      <h4>{product.title}</h4>
-      <small>
-        <Money data={product.priceRange.minVariantPrice} />
-      </small>
-    </Link>
   );
 }
 

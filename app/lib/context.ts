@@ -11,6 +11,12 @@ export async function createAppLoadContext(
   request: Request,
   env: Env,
   executionContext: ExecutionContext,
+  extraContext: {
+    requestGroupId: string;
+    buyerIp: string;
+    cookie: string;
+    purposets: string;
+  },
 ) {
   /**
    * Open a cache instance in the worker and a custom session instance.
@@ -25,7 +31,17 @@ export async function createAppLoadContext(
     AppSession.init(request, [env.SESSION_SECRET]),
   ]);
 
+  const { requestGroupId, buyerIp, cookie, purposets } = extraContext;
+
   const hydrogenContext = createHydrogenContext({
+    storefront: {
+      headers: {
+        buyerIp,
+        requestGroupId,
+        cookie,
+        purpose: purposets,
+      },
+    },
     env,
     request,
     cache,

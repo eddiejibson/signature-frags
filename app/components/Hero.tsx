@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import RainbowBg from '~/assets/rainbow.jpg';
@@ -11,21 +13,42 @@ const Hero = () => {
     setIsVideoLoaded(true);
   };
 
+  const playVideo = async () => {
+    if (videoRef.current) {
+      const videoElement = videoRef.current;
+      if (videoElement.paused) {
+        await videoElement.play();
+      }
+    }
+  };
+
   useEffect(() => {
     if (videoRef.current) {
       const videoElement = videoRef.current;
+      videoElement.play();
       if (videoElement.readyState >= 3) handleVideoLoad();
     }
   }, [videoRef]);
 
   return (
-    <div className="relative h-[460px] md:h-[510px]">
+    <div
+      className="relative h-[460px] md:h-[510px]"
+      onTouchStart={() => {
+        playVideo();
+      }}
+      onDragStart={() => {
+        playVideo();
+      }}
+      onClick={() => {
+        playVideo();
+      }}
+    >
       <div
         className="absolute top-0 w-full"
         style={{
           height: '650px',
           clipPath:
-            'polygon(100% 0%, 0% 0% , 0.00% 86.67%, 2.00% 86.62%, 4.00% 86.46%, 6.00% 86.21%, 8.00% 85.87%, 10.00% 85.46%, 12.00% 84.98%, 14.00% 84.44%, 16.00% 83.88%, 18.00% 83.29%, 20.00% 82.71%, 22.00% 82.15%, 24.00% 81.62%, 26.00% 81.14%, 28.00% 80.74%, 30.00% 80.41%, 32.00% 80.18%, 34.00% 80.04%, 36.00% 80.00%, 38.00% 80.07%, 40.00% 80.23%, 42.00% 80.50%, 44.00% 80.85%, 46.00% 81.27%, 48.00% 81.76%, 50.00% 82.30%, 52.00% 82.87%, 54.00% 83.46%, 56.00% 84.04%, 58.00% 84.60%, 60.00% 85.12%, 62.00% 85.58%, 64.00% 85.98%, 66.00% 86.29%, 68.00% 86.52%, 70.00% 86.64%, 72.00% 86.66%, 74.00% 86.58%, 76.00% 86.40%, 78.00% 86.13%, 80.00% 85.76%, 82.00% 85.33%, 84.00% 84.83%, 86.00% 84.28%, 88.00% 83.71%, 90.00% 83.12%, 92.00% 82.55%, 94.00% 81.99%, 96.00% 81.48%, 98.00% 81.02%, 100.00% 80.64%);',
+            'polygon(100% 0%, 0% 0% , 0.00% 86.67%, 2.00% 86.62%, 4.00% 86.46%, 6.00% 86.21%, 8.00% 85.87%, 10.00% 85.46%, 12.00% 84.98%, 14.00% 84.44%, 16.00% 83.88%, 18.00% 83.29%, 20.00% 82.71%, 22.00% 82.15%, 24.00% 81.62%, 26.00% 81.14%, 28.00% 80.74%, 30.00% 80.41%, 32.00% 80.18%, 34.00% 80.04%, 36.00% 80.00%, 38.00% 80.07%, 40.00% 80.23%, 42.00% 80.50%, 44.00% 80.85%, 46.00% 81.27%, 48.00% 81.76%, 50.00% 82.30%, 52.00% 82.87%, 54.00% 83.46%, 56.00% 84.04%, 58.00% 84.60%, 60.00% 85.12%, 62.00% 85.58%, 64.00% 85.98%, 66.00% 86.29%, 68.00% 86.52%, 70.00% 86.64%, 72.00% 86.66%, 74.00% 86.58%, 76.00% 86.40%, 78.00% 86.13%, 80.00% 85.76%, 82.00% 85.33%, 84.00% 84.83%, 86.00% 84.28%, 88.00% 83.71%, 90.00% 83.12%, 92.00% 82.55%, 94.00% 81.99%, 96.00% 81.48%, 98.00% 81.02%, 100.00% 80.64%)',
         }}
       >
         {!isVideoLoaded && (
@@ -35,14 +58,16 @@ const Hero = () => {
             className="absolute top-0 left-0 w-full h-full object-cover"
           />
         )}
-        <motion.video
+        <video
           preload="auto"
           ref={videoRef}
-          className="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-500 opacity-100"
+          className="absolute top-0 left-0 w-full h-full object-cover"
           src="/bg-compr.mp4"
           autoPlay
           loop
           muted
+          playsInline
+          controls={false}
           onLoadedData={handleVideoLoad}
           onCanPlayThrough={handleVideoLoad}
         />

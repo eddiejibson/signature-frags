@@ -6,6 +6,7 @@ import type {
 } from 'storefrontapi.generated';
 import { Aside } from '~/components/Aside';
 import { NavigationBar } from '~/components/common/header/Header';
+import Footer from '~/components/landing/Footer';
 
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
@@ -35,7 +36,10 @@ export function PageLayout({
           publicStoreDomain={publicStoreDomain}
         />
       )}
-      <main>{children}</main>
+      <main className="content relative">
+        {children}
+        <Footer />
+      </main>
     </Aside.Provider>
   );
 }

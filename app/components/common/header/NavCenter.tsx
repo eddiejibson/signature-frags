@@ -23,7 +23,7 @@ const NavigationCenter = ({ menu }: NavigationCenterProps) => {
             : item.url;
           return (
             <NavLink
-              className="font-semibold hover:font-bold text-white/80  hover:text-white transition-all"
+              className="font-semibold hover:scale-110 hover:font-bold text-white/80  hover:text-white transition-all"
               end
               key={item.id}
               onClick={close}

@@ -1,18 +1,10 @@
-import {
-  Await,
-  Link,
-  useLoaderData,
-  type MetaFunction,
-} from '@remix-run/react';
-import { Image, Money } from '@shopify/hydrogen';
+import { useLoaderData, type MetaFunction } from '@remix-run/react';
 import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
-import { Suspense } from 'react';
-import type {
-  FeaturedCollectionFragment,
-  RecommendedProductsQuery,
-} from 'storefrontapi.generated';
 import Hero from '~/components/Hero';
+import Features from '~/components/landing/Features';
 import InitialInfoLanding from '~/components/landing/InitialInfoLanding';
+import ProductSpotlight from '~/components/landing/ProductSpotlight';
+import { PRODUCT_SPOTLIGHT_QUERY } from '~/components/landing/queries/product-spotlight.query';
 import SocialPrompt from '~/components/landing/SocialPrompt';
 
 export const meta: MetaFunction = () => {
@@ -34,13 +26,12 @@ export async function loader(args: LoaderFunctionArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({ context }: LoaderFunctionArgs) {
-  const [{ collections }] = await Promise.all([
-    context.storefront.query(FEATURED_COLLECTION_QUERY),
-    // Add other queries here, so that they are loaded in parallel
+  const [{ products }] = await Promise.all([
+    context.storefront.query(PRODUCT_SPOTLIGHT_QUERY),
   ]);
 
   return {
-    featuredCollection: collections.nodes[0],
+    productSpotlight: products.nodes,
   };
 }
 
@@ -51,7 +42,7 @@ async function loadCriticalData({ context }: LoaderFunctionArgs) {
  */
 function loadDeferredData({ context }: LoaderFunctionArgs) {
   const recommendedProducts = context.storefront
-    .query(RECOMMENDED_PRODUCTS_QUERY)
+    .query(PRODUCT_SPOTLIGHT_QUERY)
     .catch((error) => {
       // Log query errors, but don't throw them so the page can still render
       console.error(error);
@@ -68,137 +59,35 @@ export default function Homepage() {
   return (
     <>
       <Hero />
-      <div className="content w-screen min-h-[100vh] flex flex-col pt-14 md:pt-20 px-8 md:px-12 lg:px-20 xl:px-24">
+      <div className="w-screen  flex flex-col pt-14 md:pt-20 px-8 md:px-12 lg:px-20 xl:px-24">
         <div className="w-full h-full overflow-y-auto ">
           <InitialInfoLanding />
-          <div className="justify-normal flex mt-10 flex-col">
-            <h1 className="text-xl text-white font-semibold drop-shadow-2xl">
-              Product Spotlight
-            </h1>
+          <div className="justify-normal items-center flex mt-10 flex-col">
+            <ProductSpotlight products={data.productSpotlight} />
+            <Features />
             <SocialPrompt />
           </div>
         </div>
       </div>
     </>
-    // <div className="home">
-    //   <FeaturedCollection collection={data.featuredCollection} />
-    //   <RecommendedProducts products={data.recommendedProducts} />
-    // </div>
   );
 }
 
-function FeaturedCollection({
-  collection,
-}: {
-  collection: FeaturedCollectionFragment;
-}) {
-  if (!collection) return null;
-  const image = collection?.image;
-  return (
-    <Link
-      className="featured-collection"
-      to={`/collections/${collection.handle}`}
-    >
-      {image && (
-        <div className="featured-collection-image">
-          <Image data={image} sizes="100vw" />
-        </div>
-      )}
-      <h1>{collection.title}</h1>
-    </Link>
-  );
-}
-
-function RecommendedProducts({
-  products,
-}: {
-  products: Promise<RecommendedProductsQuery | null>;
-}) {
-  return (
-    <div className="recommended-products bg-green-100">
-      <h2>Recommended Products!</h2>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Await resolve={products}>
-          {(response) => (
-            <div className="bg-green">
-              {response
-                ? response.products.nodes.map((product) => (
-                    <Link
-                      key={product.id}
-                      className="recommended-product"
-                      to={`/products/${product.handle}`}
-                    >
-                      <Image
-                        data={product.images.nodes[0]}
-                        aspectRatio="1/1"
-                        sizes="(min-width: 45em) 20vw, 50vw"
-                      />
-                      <h4>{product.title}</h4>
-                      <small>
-                        <Money data={product.priceRange.minVariantPrice} />
-                      </small>
-                    </Link>
-                  ))
-                : null}
-            </div>
-          )}
-        </Await>
-      </Suspense>
-      <br />
-    </div>
-  );
-}
-
-const FEATURED_COLLECTION_QUERY = `#graphql
-  fragment FeaturedCollection on Collection {
-    id
-    title
-    image {
-      id
-      url
-      altText
-      width
-      height
-    }
-    handle
-  }
-  query FeaturedCollection($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...FeaturedCollection
-      }
-    }
-  }
-` as const;
-
-const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-  fragment RecommendedProduct on Product {
-    id
-    title
-    handle
-    priceRange {
-      minVariantPrice {
-        amount
-        currencyCode
-      }
-    }
-    images(first: 1) {
-      nodes {
-        id
-        url
-        altText
-        width
-        height
-      }
-    }
-  }
-  query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...RecommendedProduct
-      }
-    }
-  }
-` as const;
+// function FeaturedCollection({
+//   collection,
+// }: {
+//   collection: ProductSpotlightItemFragment[];
+// }) {
+//   if (!collection) return null;
+//   const image = collection?.products?.nodes[0]?.images?.edges[0].node;
+//   return (
+//     <Link className="featured-collection" to="/collections/test">
+//       {image && (
+//         <div className="featured-collection-image">
+//           <Image data={image} sizes="100vw" />
+//         </div>
+//       )}
+//       <h1>{collection?.products?.nodes[0].title}</h1>
+//     </Link>
+//   );
+// }

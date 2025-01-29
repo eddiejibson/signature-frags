@@ -12,7 +12,7 @@ import type {
   HeaderQuery,
 } from 'storefrontapi.generated';
 import { ReactComponent as Icon } from '~/assets/icon-v2.svg';
-import { ReactComponent as SignatureFragsText } from '~/assets/text.svg';
+import { ReactComponent as SignatureFragsText } from '~/assets/text-v3.svg';
 import { useAside } from '~/components/Aside';
 import BurgerIcon from '~/components/common/header/BurgerIcon';
 import HeaderRight from '~/components/common/header/HeaderRight';
@@ -69,7 +69,7 @@ export function NavigationBar({
           <MenuSideNav menu={menu} />
           <Icon
             className={classNames(
-              'drop-shadow-2xl transition-all duration-700 text-white',
+              'drop-shadow-2xl transition-all duration-700 text-white m-0 ',
               {
                 'h-12 lg:h-16': !isNavDownPage,
                 'h-7 lg:h-8': isNavDownPage,
@@ -82,7 +82,7 @@ export function NavigationBar({
               animate={{ opacity: 100 }}
               transition={{ duration: 2, ease: 'easeIn' }}
             >
-              <SignatureFragsText className="hidden md:flex ml-2.5 h-8 lg:h-9 mt-1 w-min drop-shadow-2xl" />
+              <SignatureFragsText className="hidden md:flex ml-2.5 w-[5rem] lg:h-9  drop-shadow-2xl" />
             </motion.div>
           )}
         </div>
